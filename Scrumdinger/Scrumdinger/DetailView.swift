@@ -9,6 +9,9 @@ import SwiftUI
 
 struct DetailView: View {
     
+    // MARK: - State-Prop
+    @State private var isPresentingEditView: Bool = false
+    
     // MARK: - Stored-Prop
     let scrum: DailyScrum
     
@@ -49,6 +52,30 @@ struct DetailView: View {
             }
         }
         .navigationTitle(scrum.title)
+        .toolbar(content: {
+            Button("Edit") {
+                isPresentingEditView = true
+            }
+        })
+        .sheet(isPresented: $isPresentingEditView) {
+            NavigationStack {
+                DetailEditView()
+                    .navigationTitle(scrum.title)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                isPresentingEditView = false
+                            }
+                        }
+                        
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") {
+                                isPresentingEditView = false
+                            }
+                        }
+                    }
+            }
+        }
     }
 }
 

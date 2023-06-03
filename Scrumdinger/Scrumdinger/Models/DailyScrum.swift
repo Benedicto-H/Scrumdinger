@@ -16,6 +16,18 @@ struct DailyScrum: Identifiable {
     var lengthInMinutes: Int
     var theme: Theme
     
+    // MARK: - Computed-Prop
+    var lengthInMinutesAsDouble: Double {
+        
+        get {
+            return Double(lengthInMinutes)
+        }
+        
+        set(newValue) {
+            return lengthInMinutes = Int(newValue)
+        }
+    }
+    
     // MARK: - Init
     init(id: UUID = UUID(), title: String, attendees: [String], lengthInMinutes: Int, theme: Theme) {
         self.id = id
@@ -39,6 +51,11 @@ extension DailyScrum {
             self.id = id
             self.name = name
         }
+    }
+    
+    // MARK: - Computed-Prop (-> Singleton Instance)
+    static var emptyScrum: DailyScrum {
+        DailyScrum(title: "", attendees: [], lengthInMinutes: 5, theme: .sky)
     }
 }
 
