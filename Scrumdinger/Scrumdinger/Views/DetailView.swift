@@ -9,11 +9,12 @@ import SwiftUI
 
 struct DetailView: View {
     
-    // MARK: - State-Prop
+    // MARK: - State-Props
+    @State private var editingScrum: DailyScrum = DailyScrum.emptyScrum
     @State private var isPresentingEditView: Bool = false
     
-    // MARK: - Stored-Prop
-    let scrum: DailyScrum
+    // MARK: - State Binding-Prop
+    @Binding var scrum: DailyScrum
     
     var body: some View {
         List {
@@ -55,11 +56,12 @@ struct DetailView: View {
         .toolbar(content: {
             Button("Edit") {
                 isPresentingEditView = true
+                editingScrum = scrum
             }
         })
         .sheet(isPresented: $isPresentingEditView) {
             NavigationStack {
-                DetailEditView()
+                DetailEditView(scrum: $editingScrum)
                     .navigationTitle(scrum.title)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -71,6 +73,7 @@ struct DetailView: View {
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Done") {
                                 isPresentingEditView = false
+                                scrum = editingScrum
                             }
                         }
                     }
@@ -82,7 +85,7 @@ struct DetailView: View {
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            DetailView(scrum: DailyScrum.sampleData[0])
+            DetailView(scrum: .constant(DailyScrum.sampleData[0]))
         }
     }
 }
