@@ -20,7 +20,7 @@ struct DetailView: View {
         List {
             Section(header: Text("Meeting Info")) {
                 NavigationLink {
-                    MeetingView()
+                    MeetingView(scrum: $scrum)
                 } label: {
                     Label("Start Meeting", systemImage: "timer")
                         .font(.headline)
