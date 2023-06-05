@@ -12,6 +12,9 @@ struct ScrumsView: View {
     // MARK: - State Binding-Prop
     @Binding var scrums: [DailyScrum]
     
+    // MARK: - State-Prop
+    @State private var isPresentingNewScrumView: Bool = false
+    
     var body: some View {
         NavigationStack {
             List($scrums) { $scrum in
@@ -26,12 +29,15 @@ struct ScrumsView: View {
             .navigationTitle("Daily Scrums")
             .toolbar {
                 Button {
-                    //  Action
+                    isPresentingNewScrumView = true
                 } label: {
                     Image(systemName: "plus")
                 }
                 .accessibilityLabel("New Scrum")
             }
+        }
+        .sheet(isPresented: $isPresentingNewScrumView) {
+            NewScrumSheet(isPresentingNewScrumView: $isPresentingNewScrumView, scrums: $scrums)
         }
     }
 }
