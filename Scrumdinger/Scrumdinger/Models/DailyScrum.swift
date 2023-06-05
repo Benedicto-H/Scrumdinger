@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailyScrum: Identifiable {
+struct DailyScrum: Identifiable, Codable {
     
     // MARK: - Stored-Props
     let id: UUID
@@ -41,7 +41,7 @@ struct DailyScrum: Identifiable {
 
 extension DailyScrum {
     
-    struct Attendee: Identifiable {
+    struct Attendee: Identifiable, Codable {
         
         // MARK: - Stored-Props
         let id: UUID
