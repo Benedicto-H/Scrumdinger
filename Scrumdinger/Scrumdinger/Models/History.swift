@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct History: Identifiable {
+struct History: Identifiable, Codable {
     
     // MARK: - Stored-Props
     let id: UUID

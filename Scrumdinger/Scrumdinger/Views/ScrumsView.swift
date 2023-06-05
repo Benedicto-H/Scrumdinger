@@ -15,6 +15,12 @@ struct ScrumsView: View {
     // MARK: - State-Prop
     @State private var isPresentingNewScrumView: Bool = false
     
+    // MARK: - Environment-prop
+    @Environment(\.scenePhase) private var scenePhase
+    
+    // MARK: - Stored-Prop
+    let saveAction: () -> Void
+    
     var body: some View {
         NavigationStack {
             List($scrums) { $scrum in
@@ -39,11 +45,16 @@ struct ScrumsView: View {
         .sheet(isPresented: $isPresentingNewScrumView) {
             NewScrumSheet(isPresentingNewScrumView: $isPresentingNewScrumView, scrums: $scrums)
         }
+        .onChange(of: scenePhase) { phase in
+            if (phase == .inactive) {
+                saveAction()
+            }
+        }
     }
 }
 
 struct ScrumsView_Previews: PreviewProvider {
     static var previews: some View {
-        ScrumsView(scrums: .constant(DailyScrum.sampleData))
+        ScrumsView(scrums: .constant(DailyScrum.sampleData), saveAction: {})
     }
 }

@@ -10,12 +10,27 @@ import SwiftUI
 @main
 struct ScrumdingerApp: App {
     
-    // MARK: - State-Prop
-    @State private var scrums: [DailyScrum] = DailyScrum.sampleData
+    // MARK: - StateObject-Prop
+    @StateObject private var scrumStore: ScrumStore = ScrumStore()
     
     var body: some Scene {
         WindowGroup {
-            ScrumsView(scrums: $scrums)
+            ScrumsView(scrums: $scrumStore.scrums) {
+                Task {
+                    do {
+                        try await scrumStore.save(scrums: scrumStore.scrums)
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }
+            }
+            .task {
+                do {
+                    try await scrumStore.load()
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }
         }
     }
 }
