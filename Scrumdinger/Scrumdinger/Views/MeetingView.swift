@@ -13,8 +13,12 @@ struct MeetingView: View {
     // MARK: - State Binding-Prop
     @Binding var scrum: DailyScrum
     
-    // MARK: - StateObject-Prop
+    // MARK: - StateObject-Props
     @StateObject var scrumTimer: ScrumTimer = ScrumTimer()
+    @StateObject var speechRecognizer: SpeechRecognizer = SpeechRecognizer()
+    
+    // MARK: - State-Prop
+    @State private var isRecording: Bool = false
     
     // MARK: - Computed-Prop
     private var player: AVPlayer {
@@ -30,7 +34,7 @@ struct MeetingView: View {
             VStack {
                 MeetingHeaderView(secondsElapsed: scrumTimer.secondsElapsed, secondsRemaining: scrumTimer.secondsRemaining, theme: scrum.theme)
                 
-                MeetingTimerView(speakers: scrumTimer.speakers, theme: scrum.theme)
+                MeetingTimerView(speakers: scrumTimer.speakers, theme: scrum.theme, isRecording: isRecording)
                 
                 MeetingFooterView(speakers: scrumTimer.speakers, skipAction: scrumTimer.skipSpeaker)
             }
@@ -55,14 +59,20 @@ struct MeetingView: View {
             player.seek(to: .zero)
             player.play()
         }
+        
+        speechRecognizer.resetTranscript()
+        speechRecognizer.startTranscribing()
+        isRecording = true
         scrumTimer.startScrum()
     }
     
     private func endScrum() -> Void {
         
         scrumTimer.stopScrum()
+        speechRecognizer.stopTranscribing()
+        isRecording = false
         
-        let newHistory: History = History(attendees: scrum.attendees)
+        let newHistory: History = History(attendees: scrum.attendees, transcript: speechRecognizer.transcript)
         
         scrum.history.insert(newHistory, at: 0)
     }
